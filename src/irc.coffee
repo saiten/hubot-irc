@@ -8,6 +8,14 @@ Response = require('hubot').Response
 Irc     = require 'irc'
 
 class IrcBot extends Adapter
+  constructor: (@robot) ->
+    super @robot
+
+    @robot.notice = (user, strings...) ->
+      @adapter.notice user, strings...
+
+    @robot.Response = IrcResponse
+
   send: (user, strings...) ->
     for str in strings
       if not str?
@@ -99,9 +107,11 @@ class IrcBot extends Adapter
       debug:    process.env.HUBOT_IRC_DEBUG?
       usessl:   process.env.HUBOT_IRC_USESSL?
       userName: process.env.HUBOT_IRC_USERNAME
+      realName: process.env.HUBOT_IRC_REALNAME
 
     client_options =
       userName: options.userName,
+      realName: options.realName,
       password: options.password,
       debug: options.debug,
       port: options.port,
